@@ -44,3 +44,24 @@ def load_map(mp):
 
     return map_file
 
+def main():
+    pygame.init()
+    screen = pygame.display.set_mode((600, 450))
+    mp = MapParams()
+    while True:
+        event = pygame.event.wait()
+        if event.type == pygame.QUIT:
+            break
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_PAGEDOWN:
+                mp.decrease_zoom()  # уменьшение масштаба
+            elif event.key == pygame.K_PAGEUP:
+                mp.increase_zoom()  # увеличение масштаба
+        map_file = load_map(mp)
+        screen.blit(pygame.image.load(map_file), (0, 0))
+        pygame.display.flip()
+    pygame.quit()
+os.remove(map_file)
+
+if __name__ == "__main__":    main()
+

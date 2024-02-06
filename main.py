@@ -80,7 +80,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((600, 450))
     mp = MapParams()
-    step = 0.001
+    step = 0.0001
 
     running = True
     while running:

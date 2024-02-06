@@ -63,5 +63,6 @@ def main():
     pygame.quit()
 os.remove(map_file)
 
-if __name__ == "__main__":    main()
+if __name__ == "__main__":
+    main()
 

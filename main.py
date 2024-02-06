@@ -80,7 +80,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((600, 450))
     mp = MapParams()
-    step = 0.1
+    step = 0.001
 
     running = True
     while running:
@@ -88,7 +88,18 @@ def main():
             if event.type == pygame.QUIT:
                 running = False
             if event.type == pygame.KEYDOWN:
-                pass
+                if event.key == pygame.K_PAGEDOWN:
+                    mp.decrease_zoom()
+                elif event.key == pygame.K_PAGEUP:
+                    mp.increase_zoom()
+                elif event.key == pygame.K_UP:
+                    mp.move_up(step)
+                elif event.key == pygame.K_DOWN:
+                    mp.move_down(step)
+                elif event.key == pygame.K_RIGHT:
+                    mp.move_right(step)
+                elif event.key == pygame.K_LEFT:
+                    mp.move_left(step)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 x, y = event.pos
                 if 10 <= x <= 100 and 10 <= y <= 40:

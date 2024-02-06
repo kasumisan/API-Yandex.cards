@@ -22,6 +22,21 @@ class MapParams(object):
         if self.zoom > 1:  # ограничение нижней границы масштаба
             self.zoom -= 1
 
+    def move_up(self, step):
+        if self.lat < 85 - step / 2 ** self.zoom:
+            self.lat += step
+
+    def move_down(self, step):
+        if self.lat > -85 + step / 2 ** self.zoom:
+            self.lat -= step
+
+    def move_right(self, step):
+        self.lon += step
+
+    def move_left(self, step):
+        self.lon -= step
+
+
 
 def load_map(mp):
     map_request = "http://static-maps.yandex.ru/1.x/?ll={ll}&z={z}&l={type}".format(ll=mp.ll(), z=mp.zoom, type=mp.type)

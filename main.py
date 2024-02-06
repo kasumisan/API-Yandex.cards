@@ -3,6 +3,7 @@ import requests
 import sys
 import os
 
+
 class MapParams:
     def __init__(self):
         self.lat = 51.765334
@@ -35,6 +36,23 @@ class MapParams:
     def move_left(self, step):
         self.lon -= step
 
+        def set_map_type(self, map_type):
+            if map_type in self.layers:            self.type = self.layers[map_type]
+
+
+def draw_buttons(screen):
+    font = pygame.font.Font('MP Manga.ttf', 36)
+
+    map_button = font.render("Map", True, (255, 151, 187))
+    screen.blit(map_button, (10, 10))
+
+    satellite_button = font.render("Satellite", True, (255, 151, 187))
+    screen.blit(satellite_button, (10, 50))
+
+    hybrid_button = font.render("Hybrid", True, (255, 151, 187))
+    screen.blit(hybrid_button, (10, 90))
+
+
 def load_map(mp):
     map_request = f"http://static-maps.yandex.ru/1.x/?ll={mp.ll()}&z={mp.zoom}&l={mp.type}"
     response = requests.get(map_request)
@@ -55,6 +73,7 @@ def load_map(mp):
         sys.exit(2)
 
     return map_file
+
 
 def main():
     pygame.init()
@@ -88,6 +107,7 @@ def main():
 
     pygame.quit()
     os.remove(map_file)
+
 
 if __name__ == "__main__":
     main()

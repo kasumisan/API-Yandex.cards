@@ -3,8 +3,7 @@ import requests
 import sys
 import os
 
-
-class MapParams(object):
+class MapParams:
     def __init__(self):
         self.lat = 61.665279
         self.lon = 50.813492
@@ -12,14 +11,14 @@ class MapParams(object):
         self.type = "map"
 
     def ll(self):
-        return str(self.lon) + "," + str(self.lat)
+        return f"{self.lon},{self.lat}"
 
     def increase_zoom(self):
-        if self.zoom < 23:  # ограничение верхней границы масштаба
+        if self.zoom < 23:
             self.zoom += 1
 
     def decrease_zoom(self):
-        if self.zoom > 1:  # ограничение нижней границы масштаба
+        if self.zoom > 1:
             self.zoom -= 1
 
     def move_up(self, step):
@@ -36,10 +35,8 @@ class MapParams(object):
     def move_left(self, step):
         self.lon -= step
 
-
-
 def load_map(mp):
-    map_request = "http://static-maps.yandex.ru/1.x/?ll={ll}&z={z}&l={type}".format(ll=mp.ll(), z=mp.zoom, type=mp.type)
+    map_request = f"http://static-maps.yandex.ru/1.x/?ll={mp.ll()}&z={mp.zoom}&l={mp.type}"
     response = requests.get(map_request)
 
     if not response.ok:
@@ -63,21 +60,34 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((600, 450))
     mp = MapParams()
-    while True:
-        event = pygame.event.wait()
-        if event.type == pygame.QUIT:
-            break
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_PAGEDOWN:
-                mp.decrease_zoom()  # уменьшение масштаба
-            elif event.key == pygame.K_PAGEUP:
-                mp.increase_zoom()  # увеличение масштаба
+    step = 0.1
+
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_PAGEDOWN:
+                    mp.decrease_zoom()
+                elif event.key == pygame.K_PAGEUP:
+                    mp.increase_zoom()
+                elif event.key == pygame.K_UP:
+                    mp.move_up(step)
+                elif event.key == pygame.K_DOWN:
+                    mp.move_down(step)
+                elif event.key == pygame.K_RIGHT:
+                    mp.move_right(step)
+                elif event.key == pygame.K_LEFT:
+                    mp.move_left(step)
+
         map_file = load_map(mp)
         screen.blit(pygame.image.load(map_file), (0, 0))
         pygame.display.flip()
+
     pygame.quit()
     os.remove(map_file)
 
 if __name__ == "__main__":
     main()
-

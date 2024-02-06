@@ -3,13 +3,14 @@ import requests
 import sys
 import os
 
-
 class MapParams:
     def __init__(self):
         self.lat = 51.765334
         self.lon = 55.124111
         self.zoom = 16
         self.type = "map"
+        self.layers = {"map": "map", "satellite": "sat", "hybrid": "sat,skl"}
+
 
     def ll(self):
         return f"{self.lon},{self.lat}"
@@ -36,8 +37,9 @@ class MapParams:
     def move_left(self, step):
         self.lon -= step
 
-        def set_map_type(self, map_type):
-            if map_type in self.layers:            self.type = self.layers[map_type]
+    def set_map_type(self, map_type):
+        if map_type in self.layers:
+            self.type = self.layers[map_type]
 
 
 def draw_buttons(screen):
@@ -51,7 +53,6 @@ def draw_buttons(screen):
 
     hybrid_button = font.render("Hybrid", True, (255, 151, 187))
     screen.blit(hybrid_button, (10, 90))
-
 
 def load_map(mp):
     map_request = f"http://static-maps.yandex.ru/1.x/?ll={mp.ll()}&z={mp.zoom}&l={mp.type}"
@@ -79,35 +80,31 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((600, 450))
     mp = MapParams()
-    step = 0.0001
+    step = 0.1
 
     running = True
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_PAGEDOWN:
-                    mp.decrease_zoom()
-                elif event.key == pygame.K_PAGEUP:
-                    mp.increase_zoom()
-                elif event.key == pygame.K_UP:
-                    mp.move_up(step)
-                elif event.key == pygame.K_DOWN:
-                    mp.move_down(step)
-                elif event.key == pygame.K_RIGHT:
-                    mp.move_right(step)
-                elif event.key == pygame.K_LEFT:
-                    mp.move_left(step)
+                pass
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                x, y = event.pos
+                if 10 <= x <= 100 and 10 <= y <= 40:
+                    mp.set_map_type("map")
+                elif 10 <= x <= 170 and 50 <= y <= 80:
+                    mp.set_map_type("satellite")
+                elif 10 <= x <= 120 and 90 <= y <= 120:
+                    mp.set_map_type("hybrid")
 
         map_file = load_map(mp)
         screen.blit(pygame.image.load(map_file), (0, 0))
+        draw_buttons(screen)
         pygame.display.flip()
 
     pygame.quit()
     os.remove(map_file)
-
 
 if __name__ == "__main__":
     main()

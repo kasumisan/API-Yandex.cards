@@ -5,8 +5,8 @@ import os
 
 class MapParams:
     def __init__(self):
-        self.lat = 61.665279
-        self.lon = 50.813492
+        self.lat = 51.765334
+        self.lon = 55.124111
         self.zoom = 16
         self.type = "map"
 
@@ -60,7 +60,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((600, 450))
     mp = MapParams()
-    step = 0.1
+    step = 0.0001
 
     running = True
     while running:
